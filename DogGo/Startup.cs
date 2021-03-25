@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DogGo.Repositories;
 
 namespace DogGo
 {
@@ -23,6 +24,8 @@ namespace DogGo
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Tells ASP.net that there is a relationship between the two repositories
+            services.AddTransient<IWalkerRepository, WalkerRepository>();
             services.AddControllersWithViews();
         }
 
