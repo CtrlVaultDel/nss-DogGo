@@ -5,12 +5,12 @@ using System.Collections.Generic;
 
 namespace DogGo.Repositories
 {
-    public class WalkerRepository : IWalkerRepository
+    public class OwnerRepository : IOwnerRepository
     {
         private readonly IConfiguration _config;
 
         // The constructor accepts an IConfiguration object as a parameter. This class comes from the ASP.NET framework and is useful for retrieving things out of the appsettings.json file like connection strings.
-        public WalkerRepository(IConfiguration config)
+        public OwnerRepository(IConfiguration config)
         {
             _config = config;
         }
@@ -23,7 +23,7 @@ namespace DogGo.Repositories
             }
         }
 
-        public List<Walker> GetAllWalkers()
+        public List<Owner> GetAllOwners()
         {
             using (SqlConnection conn = Connection)
             {
@@ -31,38 +31,36 @@ namespace DogGo.Repositories
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                        SELECT w.id, w.Name AS WalkerName, w.ImageUrl, w.NeighborhoodId, n.Name AS NeighborhoodName 
-                        FROM Walker w JOIN Neighborhood n ON n.id = w.NeighborhoodId
+                        SELECT Id, Email, [Name], [Address], NeighborhoodId, Phone
+                        FROM Owner
                     ";
 
                     SqlDataReader reader = cmd.ExecuteReader();
 
-                    List<Walker> walkers = new List<Walker>();
+                    List<Owner> owners = new List<Owner>();
                     while (reader.Read())
                     {
-                        Walker walker = new Walker
+                        Owner owner = new Owner
                         {
                             Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                            Name = reader.GetString(reader.GetOrdinal("WalkerName")),
-                            ImageUrl = reader.GetString(reader.GetOrdinal("ImageUrl")),
-                            Neighborhood = new Neighborhood
-                            {
-                                Id = reader.GetInt32(reader.GetOrdinal("NeighborhoodId")),
-                                Name = reader.GetString(reader.GetOrdinal("NeighborhoodName"))
-                            }
+                            Email = reader.GetString(reader.GetOrdinal("Email")),
+                            Name = reader.GetString(reader.GetOrdinal("Name")),
+                            Address = reader.GetString(reader.GetOrdinal("Address")),
+                            NeighborhoodId = reader.GetInt32(reader.GetOrdinal("NeighborhoodId")),
+                            Phone = reader.GetString(reader.GetOrdinal("Phone"))
                         };
 
-                        walkers.Add(walker);
+                        owners.Add(owner);
                     }
 
                     reader.Close();
 
-                    return walkers;
+                    return owners;
                 }
             }
         }
 
-        public Walker GetWalkerById(int id)
+        public Owner GetOwnerById(int id)
         {
             using (SqlConnection conn = Connection)
             {
@@ -70,9 +68,9 @@ namespace DogGo.Repositories
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                        SELECT w.id, w.Name AS WalkerName, w.ImageUrl, w.NeighborhoodId, n.Name AS NeighborhoodName 
-                        FROM Walker w JOIN Neighborhood n ON n.id = w.NeighborhoodId
-                        WHERE w.Id = @id
+                        SELECT Id, Email, [Name], [Address], NeighborhoodId, Phone
+                        FROM Owner
+                        WHERE Id = @id
                     ";
 
                     cmd.Parameters.AddWithValue("@id", id);
@@ -81,20 +79,18 @@ namespace DogGo.Repositories
 
                     if (reader.Read())
                     {
-                        Walker walker = new Walker
+                        Owner owner = new Owner
                         {
                             Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                            Name = reader.GetString(reader.GetOrdinal("WalkerName")),
-                            ImageUrl = reader.GetString(reader.GetOrdinal("ImageUrl")),
-                            Neighborhood = new Neighborhood
-                            {
-                                Id = reader.GetInt32(reader.GetOrdinal("NeighborhoodId")),
-                                Name = reader.GetString(reader.GetOrdinal("NeighborhoodName"))
-                            }
+                            Email = reader.GetString(reader.GetOrdinal("Email")),
+                            Name = reader.GetString(reader.GetOrdinal("Name")),
+                            Address = reader.GetString(reader.GetOrdinal("Address")),
+                            NeighborhoodId = reader.GetInt32(reader.GetOrdinal("NeighborhoodId")),
+                            Phone = reader.GetString(reader.GetOrdinal("Phone"))
                         };
 
                         reader.Close();
-                        return walker;
+                        return owner;
                     }
                     else
                     {
