@@ -24,7 +24,7 @@ namespace DogGo.Controllers
         {
             List<Dog> dogs = _dogRepo.GetAllDogs();
 
-            return View();
+            return View(dogs);
         }
 
         // GET: Dog/Details/

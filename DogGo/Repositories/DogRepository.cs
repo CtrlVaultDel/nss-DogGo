@@ -31,7 +31,7 @@ namespace DogGo.Repositories
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                        SELECT Id, [Name], OwnerId, Breed, Notes, ImageUrl
+                        SELECT Id, [Name], OwnerId, Breed, ISNULL(Notes, 'N/A') AS Notes, ISNULL(ImageUrl, 'N/A') AS ImageUrl
                         FROM Dog
                     ";
 
@@ -47,7 +47,7 @@ namespace DogGo.Repositories
                             OwnerId = reader.GetInt32(reader.GetOrdinal("OwnerId")),
                             Breed = reader.GetString(reader.GetOrdinal("Breed")),
                             Notes = reader.GetString(reader.GetOrdinal("Notes")),
-                            ImageUrl = reader.GetString(reader.GetOrdinal("ImageUrl")),
+                            ImageUrl = reader.GetString(reader.GetOrdinal("ImageUrl"))
                         };
                         dogs.Add(dog);
                     }
@@ -66,7 +66,7 @@ namespace DogGo.Repositories
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                        SELECT Id, [Name], OwnerId, Breed, Notes, ImageUrl
+                        SELECT Id, [Name], OwnerId, Breed, ISNULL(Notes, 'N/A') AS Notes, ISNULL(ImageUrl, 'N/A') AS ImageUrl
                         FROM Dog
                         WHERE OwnerId = @id
                     ";
@@ -85,6 +85,9 @@ namespace DogGo.Repositories
                                 Name = reader.GetString(reader.GetOrdinal("Name")),
                                 OwnerId = reader.GetInt32(reader.GetOrdinal("OwnerId")),
                                 Breed = reader.GetString(reader.GetOrdinal("Breed")),
+                                Notes = reader.GetString(reader.GetOrdinal("Notes")),
+                                ImageUrl = reader.GetString(reader.GetOrdinal("ImageUrl"))
+
                             };
                             dogs.Add(dog);
                         };
@@ -107,8 +110,9 @@ namespace DogGo.Repositories
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                        SELECT Id, [Name], OwnerId, Breed, Notes, ImageUrl
+                        SELECT Id, [Name], OwnerId, Breed, ISNULL(Notes, 'N/A') AS Notes, ISNULL(ImageUrl, 'N/A') AS ImageUrl
                         FROM Dog
+                        WHERE Id = @id
                     ";
 
                     cmd.Parameters.AddWithValue("@id", id);
