@@ -27,6 +27,7 @@ namespace DogGo
             // Tells ASP.net that there is a relationship between the two repositories
             services.AddTransient<IWalkerRepository, WalkerRepository>();
             services.AddTransient<IOwnerRepository, OwnerRepository>();
+            services.AddTransient<IDogRepository, DogRepository>();
             services.AddControllersWithViews();
         }
 
