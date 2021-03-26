@@ -1,7 +1,7 @@
 ﻿using DogGo.Models;
+using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
-using System.Collections.Generic;
 
 namespace DogGo.Repositories
 {
@@ -49,7 +49,6 @@ namespace DogGo.Repositories
                             Notes = reader.GetString(reader.GetOrdinal("Notes")),
                             ImageUrl = reader.GetString(reader.GetOrdinal("ImageUrl")),
                         };
-
                         dogs.Add(dog);
                     }
 
@@ -59,7 +58,47 @@ namespace DogGo.Repositories
                 }
             }
         }
+        public List<Dog> GetDogsByOwnerId(int id)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        SELECT Id, [Name], OwnerId, Breed, Notes, ImageUrl
+                        FROM Dog
+                        WHERE OwnerId = @id
+                    ";
 
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    List<Dog> dogs = new List<Dog>();
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            Dog dog = new Dog
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                                Name = reader.GetString(reader.GetOrdinal("Name")),
+                                OwnerId = reader.GetInt32(reader.GetOrdinal("OwnerId")),
+                                Breed = reader.GetString(reader.GetOrdinal("Breed")),
+                            };
+                            dogs.Add(dog);
+                        };
+                        reader.Close();
+                        return dogs;
+                    }
+                    else
+                    {
+                        reader.Close();
+                        return null;
+                    }
+                }
+            }
+        }
         public Dog GetDogById(int id)
         {
             using (SqlConnection conn = Connection)
