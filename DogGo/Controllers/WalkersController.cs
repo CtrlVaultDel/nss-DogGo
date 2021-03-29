@@ -1,4 +1,5 @@
 ﻿using DogGo.Models;
+using DogGo.Models.ViewModels;
 using DogGo.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -30,14 +31,24 @@ namespace DogGo.Controllers
         // GET: Walkers/Details/
         public ActionResult Details(int id)
         {
-            Walker walker = _walkerRepo.GetWalkerById(id);
+            Walker walker = _walkerRepo.GetWalkerById(id); 
+            List<Walk> walks = _walkerRepo.GetWalksByWalkerId(id);
 
-            if (walker == null)
+            // Initiate variable to hold total seconds the walker walked
+            int secondsWalked = 0;
+
+            foreach(Walk walk in walks)
             {
-                return NotFound();
+                secondsWalked += walk.Duration;
             }
+            walker.TotalWalkTime = DateTime.Today.Add(TimeSpan.FromSeconds(secondsWalked)).ToString("hh:mm");
+            WalkerProfileViewModel vm = new WalkerProfileViewModel()
+            {
+                Walker = walker,
+                Walks = walks
+            };
 
-            return View(walker);
+            return View(vm);          
         }
 
         // GET: WalkersController/Create
