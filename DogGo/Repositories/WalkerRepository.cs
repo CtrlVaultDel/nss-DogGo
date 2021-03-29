@@ -105,9 +105,8 @@ namespace DogGo.Repositories
             }
         }
 
-        public List<Walker> GetWalkerInNeighborhood(int id)
+        public List<Walker> GetWalkersInNeighborhood(int id)
         {
-            List<Walker> walkers = new List<Walker>();
             using (SqlConnection conn = Connection)
             {
                 conn.Open();
@@ -119,10 +118,11 @@ namespace DogGo.Repositories
                         WHERE NeighborhoodId = @neighborhoodId
                     ";
 
-                    cmd.Parameters.AddWithValue("@id", id);
+                    cmd.Parameters.AddWithValue("@neighborhoodId", id);
 
                     SqlDataReader reader = cmd.ExecuteReader();
 
+                    List<Walker> walkers = new List<Walker>();
                     while (reader.Read())
                     {
                         Walker walker = new Walker
