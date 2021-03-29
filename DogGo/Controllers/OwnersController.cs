@@ -98,14 +98,15 @@ namespace DogGo.Controllers
             {
                 return NotFound();
             }
-           
-            OwnerFormViewModel vm = new OwnerFormViewModel()
+            else
             {
-                Owner = owner,
-                Neighborhoods = neighborhoods
-            };
-
-            return View(vm);
+                OwnerFormViewModel vm = new OwnerFormViewModel()
+                {
+                    Owner = owner,
+                    Neighborhoods = neighborhoods
+                };
+                return View(vm);
+            }        
         }
 
         // POST: Owners/Edit/5
