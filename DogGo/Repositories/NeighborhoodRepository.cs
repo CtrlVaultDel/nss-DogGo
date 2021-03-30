@@ -60,7 +60,7 @@ namespace DogGo.Repositories
                 {
                     cmd.CommandText = @"
                         SELECT 
-                            Id, Name                     
+                            n.Id, n.Name                     
 	                    FROM Neighborhood n	                                                   
 	                    WHERE Id = @id
                     ";

@@ -39,7 +39,7 @@ namespace DogGo.Controllers
         {
             int ownerId = GetCurrentUserId();
             Owner currentOwner = _ownerRepo.GetOwnerById(ownerId);
-            List<Walker> walkers = _walkerRepo.GetWalkersInNeighborhood(currentOwner.NeighborhoodId);
+            List<Walker> walkers = _walkerRepo.GetWalkersInNeighborhood(currentOwner.Neighborhood.Id);
 
             return View(walkers);
         }
