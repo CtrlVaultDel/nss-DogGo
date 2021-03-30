@@ -104,5 +104,76 @@ namespace DogGo.Repositories
                 }
             }
         }
+
+        public List<Walker> GetWalkersInNeighborhood(int id)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        SELECT Id, [Name], ImageUrl, NeighborhoodId
+                        FROM Walker
+                        WHERE NeighborhoodId = @neighborhoodId
+                    ";
+
+                    cmd.Parameters.AddWithValue("@neighborhoodId", id);
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    List<Walker> walkers = new List<Walker>();
+                    while (reader.Read())
+                    {
+                        Walker walker = new Walker
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                            Name = reader.GetString(reader.GetOrdinal("WalkerName")),
+                            ImageUrl = reader.GetString(reader.GetOrdinal("ImageUrl")),
+                            NeighborhoodId = reader.GetInt32(reader.GetOrdinal("NeighborhoodId"))
+                        };
+                        walkers.Add(walker);
+                    }
+                    reader.Close();
+                    return walkers;
+                }
+            }
+        }
+
+        public List<Walk> GetWalksByWalkerId (int id)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        SELECT Id, Date, Duration, WalkerId, DogId
+                        FROM Walks
+                        WHERE WalkerId = @walkerId
+                    ";
+
+                    cmd.Parameters.AddWithValue("@walkerId", id);
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    List<Walk> walks = new List<Walk>();
+                    while (reader.Read())
+                    {
+                        Walk walk = new Walk
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                            Date = reader.GetDateTime(reader.GetOrdinal("Date")),
+                            Duration = reader.GetInt32(reader.GetOrdinal("Duration")),
+                            WalkerId = reader.GetInt32(reader.GetOrdinal("WalkerId")),
+                            DogId = reader.GetInt32(reader.GetOrdinal("DogId"))
+                        };
+                        walks.Add(walk);
+                    }
+                    reader.Close();
+                    return walks;
+                }
+            }
+        }
     }
 }
