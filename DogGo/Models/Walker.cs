@@ -7,8 +7,6 @@ namespace DogGo.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-
-        [Display(Name="Neighborhood")]
         public int NeighborhoodId { get; set; }
         public string ImageUrl { get; set; }
         public string TotalWalkTime { get; set; }
