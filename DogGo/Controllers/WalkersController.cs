@@ -31,17 +31,29 @@ namespace DogGo.Controllers
         private int GetCurrentUserId()
         {
             string id = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            return int.Parse(id);
+            if (id == null)
+            {
+                return 0;
+            }
+            else
+            {
+                return int.Parse(id);
+            }
         }
 
         // GET: Walkers
         public ActionResult Index()
         {
             int ownerId = GetCurrentUserId();
-            Owner currentOwner = _ownerRepo.GetOwnerById(ownerId);
-            List<Walker> walkers = _walkerRepo.GetWalkersInNeighborhood(currentOwner.Neighborhood.Id);
+            if(ownerId > 0)
+            {
+                Owner currentOwner = _ownerRepo.GetOwnerById(ownerId);
+                List<Walker> walkers = _walkerRepo.GetWalkersInNeighborhood(currentOwner.Neighborhood.Id);
 
-            return View(walkers);
+                return View(walkers);
+            }
+            List<Walker> allWalkers = _walkerRepo.GetAllWalkers();
+            return View(allWalkers);
         }
 
         // GET: Walkers/Details/
